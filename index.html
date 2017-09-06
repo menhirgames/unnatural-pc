@@ -20,10 +20,10 @@
       <div class="tab-content">
         <h2 class="text-center" style="margin:50px;">Unnatural Kickstarter: Pledge and shipping calculator</h2>
         <form class="form-horizontal">
-          <div class="col-md-8">
+          <div class="col-md-12 center-block">
             <div class="form-group">
-              <label for="pledge" class="control-label col-md-6">Pledge</label>
-              <div class="col-md-6">
+              <label for="pledge" class="control-label col-md-4">Pledge</label>
+              <div class="col-md-4">
                 <select name="pledge" class="form-control" v-model="pledgeValue">
                 <option value="1">Custom Reward ($1)</option>
                 <option value="90">Monster Pack ($90)</option>
@@ -31,12 +31,12 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="shippping" class="control-label col-md-6">Shipping</label>
-              <div class="col-md-6">
+              <label for="shippping" class="control-label col-md-4">Shipping</label>
+              <div class="col-md-4">
                 <select name="shipping" class="form-control" v-model="shippingType">
                 <option value="U">USA: 10 USD + 4 USD each 100 grams.</option>
                 <option value="E">Europe: 12 USD + 5 USD each 100 grams.</option>
-                <option value="R">Rest of the World: 7 USD each 100 grams (minimum 21 USD).</option>
+                <option value="R">Rest of the World: 7 USD each 100 grams (MINIMUM 21 USD).</option>
               </select>
               </div>
             </div>
@@ -44,12 +44,15 @@
               <div class="col-md-6">
                 <h3 class="text-right">Monsters add-ons</h3>
               </div>
+              <div class="col-md-1 col-md-offset-2">
+                <button class="btn btn-info" @click.prevent="resetQs">Clean all</button>
+              </div>
             </div>
             <div class="form-group">
-              <label for="bio-engineer" class="control-label col-md-6">The bio-engineer</label>
+              <label for="bio-engineer" class="control-label col-md-4">The bio-engineer</label>
               <div class="col-md-3">
                 <select name="bio-engineer" class="form-control" v-model="engineersQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
+                  <option v-for="n in get10Array()" v-bind:value="n * 12">
                     x{{n}} model(s) (+${{n * 12}})
                   </option>
                 </select>
@@ -61,10 +64,10 @@
             </div>
 
             <div class="form-group">
-              <label for="stingers" class="control-label col-md-6">Running stingers</label>
+              <label for="stingers" class="control-label col-md-4">Running stingers</label>
               <div class="col-md-3">
                 <select name="stingers" class="form-control" v-model="stingersQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
+                  <option v-for="n in get10Array()" v-bind:value="n * 18">
                     x{{n * 5}} models pack (+${{n * 18}})
                   </option>
                 </select>
@@ -76,10 +79,10 @@
             </div>
 
             <div class="form-group">
-              <label for="hen" class="control-label col-md-6">Falling Hen</label>
+              <label for="hen" class="control-label col-md-4">Falling Hen</label>
               <div class="col-md-3">
                 <select name="hen" class="form-control" v-model="henQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
+                  <option v-for="n in get10Array()" v-bind:value="n * 55">
                     x{{n}} model(s) (+${{n * 55}})
                   </option>
                 </select>
@@ -91,11 +94,11 @@
             </div>
 
             <div class="form-group">
-              <label for="chicks" class="control-label col-md-6">Flying chicks</label>
+              <label for="chicks" class="control-label col-md-4">Flying chicks</label>
               <div class="col-md-3">
                 <select name="chicks" class="form-control" v-model="chicksQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
-                    x{{n *4}} models pack (+${{n * 55}})
+                  <option v-for="n in get10Array()" v-bind:value="n * 24">
+                    x{{n *4}} models pack (+${{n * 24}})
                   </option>
                 </select>
               </div>
@@ -106,10 +109,10 @@
             </div>
 
             <div class="form-group">
-              <label for="toad" class="control-label col-md-6">Eager Toad</label>
+              <label for="toad" class="control-label col-md-4">Eager Toad</label>
               <div class="col-md-3">
                 <select name="toad" class="form-control" v-model="toadQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
+                  <option v-for="n in get10Array()" v-bind:value="n * 45">
                     x{{n}} model(s) (+${{n * 45}})
                   </option>
                 </select>
@@ -121,10 +124,10 @@
             </div>
 
             <div class="form-group">
-              <label for="toadlet" class="control-label col-md-6">Toadlets</label>
+              <label for="toadlet" class="control-label col-md-4">Toadlets</label>
               <div class="col-md-3">
                 <select name="toad" class="form-control" v-model="toadletsQ">
-                  <option v-for="n in get10Array()" v-bind:value="n">
+                  <option v-for="n in get10Array()" v-bind:value="n * 15">
                     x{{n * 5}} models pack (+${{n * 15}})
                   </option>
                 </select>
@@ -137,14 +140,47 @@
 
             <div class="form-group">
               <div class="col-md-6">
+                <h3 class="text-right">Kingdoms Add-ons</h3>
+              </div>
+            </div>
+            
+            <div v-for="addon in getAllAddons()">
+              <img class="center-block" :src="addon.img">
+              <div class="form-group" v-for="(data, mini) in addon.minis">
+                <label :for="mini" class="control-label col-md-4">{{mini}}</label>
+                <div class="col-md-4">
+                  <select :name="mini" class="form-control" v-model="miniaturesTotals[mini]">
+                    <option v-for="n in get10Array()" v-bind:value="n">
+                      x{{n}} model(s) (+${{n * data.cost}}, +{{n * data.w}} grs.)
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="form-group">
+              <div class="col-md-6">
                 <h3 class="text-right">Pledge totals</h3>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="total-cost" class="control-label col-md-6">Total pledge cost: </label>
+              <label for="total-cost" class="control-label col-md-4">Total pledge cost (USD): </label>
               <div class="col-md-6">
                 <input type="text" name="total-cost" v-bind:value="getTotalCost()" disabled="disabled"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="total-cost" class="control-label col-md-4">Total pledge weight (GRS): </label>
+              <div class="col-md-6">
+                <input type="text" name="total-w" v-bind:value="getTotalWeight()" disabled="disabled"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="total-cost" class="control-label col-md-4">Total shipping cost (USD): </label>
+              <div class="col-md-6">
+                <input type="text" name="total-w" v-bind:value="getShippingCost()" disabled="disabled"/>
               </div>
             </div>
 
@@ -154,31 +190,28 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
     new Vue({
       el: '#app',
       data: {
         pledgeValue: '',
         shippingType: '',
-        engineersQ: '',
+        engineersQ: 0,
         engineerstl: false,
         engineerW: 40,
-        stingersQ: '',
+        stingersQ: 0,
         stingerstl: false,
         stingersW: 100,
-        henQ: '',
+        henQ: 0,
         henstl: false,
         henW: 275,
-        chicksQ: '',
+        chicksQ: 0,
         chicksstl: false,
         chicksW: 280,
-        toadQ: '',
+        toadQ: 0,
         toadstl: false,
         toadW: 210,
-        toadletsQ: '',
+        toadletsQ: 0,
         toadletsstl: false,
         toadletsW: 100,
         stl_costs: {
@@ -186,8 +219,103 @@
           stinger: 4,
           hen:15,
           chicks: 4,
-          toad: 4,
+          toad: 12,
           toadlets: 4,
+        },
+        miniaturesTotals: {},
+        akkirian: {
+          "img": "imgs/akkirian.PNG",
+          minis: {
+            "AK1-2101": { cost: 2.5, w: 16 },
+            "AK1-2201": { cost: 2.5, w: 16 },
+            "AK1-2102": { cost: 2.5, w: 16 },
+            "AK1-3301": { cost: 2.5, w: 16 },
+            "AK1-3201": { cost: 2.5, w: 16 },
+            "AK1-4201": { cost: 5, w: 35 }
+          }
+        },
+        hassimi: {
+          "img": "imgs/hassimi.PNG",
+          minis: {
+            "HA1-2101": { cost: 2.5, w: 16 },
+            "HA1-2201": { cost: 2.5, w: 16 },
+            "HA1-2102": { cost: 2.5, w: 16 },
+            "HA1-3101": { cost: 2.5, w: 16 },
+            "HA1-4101": { cost: 5, w: 35 },
+            "HA1-4301": { cost: 5, w: 35 }
+          }
+        },
+        uyghurd: {
+          "img": "imgs/uyghurd.PNG",
+          minis: {
+            "UH1-2101": { cost: 2.5, w: 16 },
+            "UH1-2102": { cost: 2.5, w: 16 },
+            "UH1-3101": { cost: 2.5, w: 16 },
+            "UH1-4101": { cost: 7, w: 35 },
+            "UH1-4201": { cost: 7, w: 35 },
+            "UH1-4301": { cost: 7, w: 35 }
+          }
+        },
+        rossian: {
+          "img": "imgs/rossian.PNG",
+          minis: {
+            "RO1-2101": { cost: 2.5, w: 16 },
+            "RO1-2201": { cost: 2.5, w: 16 },
+            "RO1-2102": { cost: 2.5, w: 16 },
+            "RO1-2202": { cost: 2.5, w: 16 },
+            "RO1-3101": { cost: 2.5, w: 16 },
+            "RO1-4201": { cost: 5, w: 35 }
+          }
+        },
+        channelers: {
+          "img": "imgs/channelers.PNG",
+          minis: {
+            "AK1-1401": { cost: 5, w: 20 },
+            "HA1-1401": { cost: 5, w: 20 },
+            "UY1-1401": { cost: 5, w: 20 },
+            "RO1-1402": { cost: 5, w: 20 }
+          }
+        },
+        champions: {
+          "img": "imgs/champions.jpg",
+          minis: {
+            "AK1-1201": { cost: 6, w: 20 },
+            "HA1-1201": { cost: 6, w: 20 },
+            "UY1-1201": { cost: 6, w: 20 },
+            "RO1-1201": { cost: 6, w: 20 },
+            "ER1-1201": { cost: 6, w: 20 },
+            "IN1-1201": { cost: 6, w: 20 },
+            "NO1-1201": { cost: 6, w: 20 },
+            "DO1-1201": { cost: 6, w: 20 },
+            "EK1-1201": { cost: 6, w: 20 },
+            "UR1-1201": { cost: 6, w: 20 },
+            "SU1-1201": { cost: 6, w: 20 },
+            "SH1-1301": { cost: 6, w: 20 }
+          }
+        },
+        creatures: {
+          "img": "imgs/creatures.jpg",
+          minis: {
+            "RRU1-1101": { cost: 6, w: 20 },
+            "RVA1-1201": { cost: 7, w: 20 },
+            "RYO1-1101": { cost: 6, w: 20 },
+            "RIT1-1201": { cost: 7, w: 20 },
+            "RYO1-1101": { cost: 7, w: 20 },
+            "RRA1-1201": { cost: 6, w: 20 },
+            "RSI1-1201": { cost: 6, w: 20 },
+            "RJO1-1201": { cost: 19, w: 45 }
+          }
+        },
+        shippingCalcs: {
+          "E": function(weight) {
+            return 12 + ((weight / 100) * 5);
+          },
+          "U": function(weight){
+            return 10 + ((weight / 100) * 4);
+          },
+          "R": function(weight){
+            return (weight / 100) * 7;
+          }
         }
       },
       methods: {
@@ -204,26 +332,63 @@
         created: function () {
 
         },
+        resetQs: function() {
+          this.engineersQ = this.stingersQ = this.henQ = this.chicksQ = this.toadQ = this.toadletsQ = 0;
+        },
+        calculateTotalAddons: function() {
+          var total = {
+            c: 0,
+            w: 0
+          };
+          for (var i = 0; i < this.getAllAddons().length; i++) {
+            var minis = this.getAllAddons()[i].minis;
+            for(var key in minis){
+              if(this.miniaturesTotals[key]){
+                total.c = total.c + (this.miniaturesTotals[key] * minis[key].cost);
+                total.w = total.w + (this.miniaturesTotals[key] * minis[key].w);
+              }
+            }
+          }
+
+          return total;
+        },
+        getAllAddons: function() {
+          return [this.akkirian, this.hassimi, this.uyghurd, this.rossian, this.channelers, this.champions, this.creatures];
+        },
         getTotalCost: function () {
-          return this.getEngineerCost() + this.getStingerCost() + this.getHenCost() + this.getChicksCost() + this.getToadCost() + this.getToadletsCost();
+          var unnaturalCost = this.getEngineerCost() + this.getStingerCost() + this.getHenCost() + this.getChicksCost() + this.getToadCost() + this.getToadletsCost();
+          var addons = this.calculateTotalAddons();
+          return unnaturalCost + addons.c;
+        },
+        getTotalWeight: function() {
+          var w1 = this.getUnnaturalWeight();
+          var w2 = this.calculateTotalAddons();
+          return  w1 + w2.w;
+        },
+        getShippingCost: function() {
+          if(!this.shippingType) return 0;
+          return this.shippingCalcs[this.shippingType](this.getTotalWeight());
+        },
+        getUnnaturalWeight: function() {
+          return (this.engineersQ * this.engineerW) + (this.stingersQ * this.stingersW) + (this.henQ * this.henW) + (this.chicksQ * this.chicksW) + (this.toadQ * this.toadW) + (this.toadletsQ * this.toadletsW);
         },
         getEngineerCost: function() {
-          return this.engineersQ * 12 + (this.engineerstl ? this.getStlCost("engineer") : 0);
+          return this.engineersQ + (this.engineerstl ? this.getStlCost("engineer") : 0);
         },
         getStingerCost: function() {
-          return this.stingersQ * 18 + (this.stingerstl ? this.getStlCost("stinger") : 0);
+          return this.stingersQ + (this.stingerstl ? this.getStlCost("stinger") : 0);
         },
         getHenCost: function() {
-          return this.henQ * 55 + (this.henstl ? this.getStlCost("hen") : 0);
+          return this.henQ + (this.henstl ? this.getStlCost("hen") : 0);
         },
         getChicksCost: function() {
-          return this.chicksQ * 24 + (this.chicksstl ? this.getStlCost("chicks") : 0);
+          return this.chicksQ + (this.chicksstl ? this.getStlCost("chicks") : 0);
         },
         getToadCost: function() {
-          return this.toadQ * 45 + (this.toadstl ? this.getStlCost("toad") : 0);
+          return this.toadQ + (this.toadstl ? this.getStlCost("toad") : 0);
         },
         getToadletsCost: function() {
-          return this.toadletsQ * 15 + (this.toadletsstl ? this.getStlCost("toadlets") : 0);
+          return this.toadletsQ + (this.toadletsstl ? this.getStlCost("toadlets") : 0);
         },
         getStlCost: function(name){
           return this.stl_costs[name];
