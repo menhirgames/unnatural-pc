@@ -352,18 +352,31 @@
 
           return total;
         },
+        getMonsterPackCosts: function(){
+          if(this.isAMonsterPack()){
+            return {
+              w: 525,
+              c: 90
+            }
+          }else{
+            return {
+              w: 0,
+              c: 1,
+            }
+          }
+        },
         getAllAddons: function() {
           return [this.akkirian, this.hassimi, this.uyghurd, this.rossian, this.channelers, this.champions, this.creatures];
         },
         getTotalCost: function () {
           var unnaturalCost = this.getEngineerCost() + this.getStingerCost() + this.getHenCost() + this.getChicksCost() + this.getToadCost() + this.getToadletsCost();
           var addons = this.calculateTotalAddons();
-          return unnaturalCost + addons.c;
+          return unnaturalCost + addons.c + this.getMonsterPackCosts().c;
         },
         getTotalWeight: function() {
           var w1 = this.getUnnaturalWeight();
           var w2 = this.calculateTotalAddons();
-          return  w1 + w2.w;
+          return  w1 + w2.w + this.getMonsterPackCosts().w;
         },
         getShippingCost: function() {
           if(!this.shippingType) return 0;
